@@ -1,8 +1,6 @@
-// https://cses.fi/problemset/task/1746
-
 #include <bits/stdc++.h>
 using namespace std;
-// #define int long long
+#define int long long
 #define nL "\n"
 #define pb push_back
 #define mk make_pair
@@ -29,63 +27,79 @@ typedef unordered_map<string, vi> umsvi;
 typedef unordered_map<int, vi> umivi;
 typedef map<int, int> mii;
 const int mod = 1e9 + 7;
+int n, m;
+int a[100005];
 
 void solve()
 {
-    int n, m;
     cin >> n >> m;
-
-    vi value(n);
-
-    loop(i, 0, n) cin >> value[i];
+    loop(i, 0, n) cin >> a[i];
 
     vvi dp(n, vi(m + 1, 0));
 
-    if (value[0] == 0)
+    if (a[0] == 0)
     {
-        loop(i, 1, m + 1)
-        {
-            dp[0][i] = 1;
-        }
+        forEqual(i, 1, m) dp[0][i] = 1;
     }
     else
     {
-        dp[0][value[0]] = 1;
+        dp[0][a[0]] = 1;
     }
 
-    loop(i, 1, n)
+    for (int i = 1; i < n; i++)
     {
-        loop(j, 1, m + 1)
+        if (a[i] == 0)
         {
-            if (value[i] != j && value[i] != 0)
+            for (int j = 1; j <= m; j++)
             {
-                dp[i][j] = 0;
-            }
-            else
-            {
-                dp[i][j] = ((dp[i - 1][j]) % mod + (dp[i - 1][j - 1]) % mod) % mod;
-                if (j + 1 < m + 1)
+                dp[i][j] += dp[i - 1][j];
+                dp[i][j] %= mod;
+
+                if (j - 1 >= 1)
                 {
-                    dp[i][j] = (dp[i][j] + dp[i - 1][j + 1]) % mod;
+                    dp[i][j] += dp[i - 1][j - 1];
+                    dp[i][j] %= mod;
                 }
+
+                if (j + 1 <= m)
+                {
+                    dp[i][j] += dp[i - 1][j + 1];
+                    dp[i][j] %= mod;
+                }
+            }
+        }
+        else
+        {
+            dp[i][a[i]] += dp[i - 1][a[i]];
+            dp[i][a[i]] %= mod;
+
+            if (a[i] - 1 >= 1)
+            {
+                dp[i][a[i]] += dp[i - 1][a[i] - 1];
+                dp[i][a[i]] %= mod;
+            }
+
+            if (a[i] + 1 <= m)
+            {
+                dp[i][a[i]] += dp[i - 1][a[i] + 1];
+                dp[i][a[i]] %= mod;
             }
         }
     }
 
-    // for (auto it : dp)
+    // for (int i = 0; i < n; i++)
     // {
-    //     for (auto it2 : it)
+    //     for (int j = 1; j <= m; j++)
     //     {
-    //         cout << it2 << " ";
+    //         cout << dp[i][j] << " ";
     //     }
-
     //     cout << nL;
     // }
     int ans = 0;
-
-    loop(i, 1, m + 1)
+    forEqual(i, 1, m)
     {
-        ans = (ans + dp[n - 1][i]) % mod;
+        ans += dp[n - 1][i];
+        ans %= mod;
     }
 
     cout << ans << nL;

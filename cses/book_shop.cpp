@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-// #define int long long
+#define int long long
 #define nL "\n"
 #define pb push_back
 #define mk make_pair
@@ -32,51 +32,27 @@ void solve()
 {
     int n, x;
     cin >> n >> x;
-    vi price(n), pages(n);
-    loop(i, 0, n)
-    {
-        cin >> price[i];
-    }
-    loop(i, 0, n)
-    {
-        cin >> pages[i];
-    }
-    vector<pii> arr;
 
-    loop(i, 0, n)
-    {
-        arr.pb({price[i], pages[i]});
-    }
+    vector<pii> arr(n);
+
+    loop(i, 0, n) cin >> arr[i].F;
+    loop(i, 0, n) cin >> arr[i].S;
+
+    vvi dp(n + 1, vi(x + 1, 0));
 
     sort(all(arr));
-    vvi dp(n + 1, vi(x + 1, 0));
 
     loop(i, 1, n + 1)
     {
         loop(j, arr[i - 1].F, x + 1)
         {
-            // dp[i][j] = dp[i][j - 1];
             dp[i][j] = dp[i - 1][j];
-            if (j >= arr[i - 1].F)
-            {
+            if (arr[i - 1].F <= j)
                 dp[i][j] = max(dp[i][j], dp[i - 1][j - arr[i - 1].F] + arr[i - 1].S);
-            }
         }
     }
 
-    cout << dp[n][x] << nL;
-
-    // vi dp(x + 1, 0);
-
-    // loop(i, 0, n)
-    // {
-    //     rloop(j, arr[i].S, x + 1)
-    //     {
-    //         dp[j] = max(dp[j], dp[j - arr[i].S] + arr[i].F);
-    //     }
-    // }
-
-    // cout << dp[x] << nL;
+    cout << dp[n][x] << endl;
 }
 signed main()
 {

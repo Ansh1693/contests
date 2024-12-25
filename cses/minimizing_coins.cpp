@@ -29,37 +29,58 @@ typedef unordered_map<string, vi> umsvi;
 typedef unordered_map<int, vi> umivi;
 typedef map<int, int> mii;
 const int mod = 1e9 + 7;
+int n, x;
+int coins[101];
+int dp[1000001];
+int ans = 1e9;
+
+void rec(int curr, int i, int tot)
+{
+    if (curr == x)
+    {
+        ans = min(ans, tot);
+        return;
+    }
+
+    if (curr > x || i > n)
+    {
+        return;
+    }
+
+    rec(curr + coins[i], i, tot + 1);
+    rec(curr, i + 1, tot);
+}
 
 void solve()
 {
-    int n, x;
     cin >> n >> x;
-    vi value(n);
-    vi dp(x + 1, INT_MAX);
+
+    loop(i, 0, n) cin >> coins[i];
+
+    sort(coins, coins + n);
+
+    loop(i, 0, x + 1) dp[i] = 1e9;
     dp[0] = 0;
-    loop(i, 0, n)
-    {
-        cin >> value[i];
-    }
 
     for (int i = 1; i <= x; i++)
     {
-        for (auto it : value)
+        for (int j = 0; j < n; j++)
         {
-            if (i >= it)
+            if (i >= coins[j])
             {
-                dp[i] = min(dp[i], 1 + dp[i - it]);
+                dp[i] = min(dp[i], dp[i - coins[j]] + 1);
             }
         }
     }
 
-    if (dp[x] == INT_MAX)
+    if (dp[x] == 1e9)
     {
-        cout << "-1" << endl;
+        cout << -1;
     }
     else
     {
-        cout << dp[x] << endl;
+
+        cout << dp[x];
     }
 }
 

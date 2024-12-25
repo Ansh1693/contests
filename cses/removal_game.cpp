@@ -29,67 +29,32 @@ typedef unordered_map<string, vi> umsvi;
 typedef unordered_map<int, vi> umivi;
 typedef map<int, int> mii;
 const int mod = 1e9 + 7;
+int n;
+int a[5001];
+
+int dp[5001][5001];
+
+int rec(int i, int j)
+{
+    if (i > j)
+        return 0;
+    if (dp[i][j] != -1)
+        return dp[i][j];
+    int x = a[i] + min(rec(i + 2, j), rec(i + 1, j - 1));
+    int y = a[j] + min(rec(i, j - 2), rec(i + 1, j - 1));
+    return dp[i][j] = max(x, y);
+}
 
 void solve()
 {
-    int n;
     cin >> n;
+    loop(i, 0, n) cin >> a[i];
 
-    deque<int> q;
+    memset(dp, -1, sizeof(dp));
 
-    int x;
-    loop(i, 0, n)
-    {
-        cin >> x;
-        q.pb(x);
-    }
-
-    vi dp(n, 0);
-    if (q.front() > q.back())
-    {
-        dp[0] = q.front();
-        q.pop_front();
-    }
-    else
-    {
-        dp[0] = q.back();
-        q.pop_back();
-    }
-
-    if (q.front() > q.back())
-    {
-        dp[1] = q.front();
-        q.pop_front();
-    }
-    else
-    {
-        dp[1] = q.back();
-        q.pop_back();
-    }
-
-    loop(i, 2, n)
-    {
-        if (q.front() > q.back())
-        {
-            dp[i] = dp[i - 2] + q.front();
-            q.pop_front();
-        }
-        else
-        {
-            dp[i] = dp[i - 2] + q.back();
-            q.pop_back();
-        }
-    }
-
-    for (auto it : dp)
-    {
-        cout << it << " ";
-    }
-
-    cout << nL;
-
-    cout << max(dp[n - 1], dp[n - 2]) << nL;
+    cout << rec(0, n - 1) << nL;
 }
+
 signed main()
 {
     ios_base::sync_with_stdio(false);

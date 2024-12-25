@@ -28,101 +28,16 @@ typedef unordered_map<int, vi> umivi;
 typedef map<int, int> mii;
 const int mod = 1e9 + 7;
 
-bool distributeInstructions(const string &s, int n, string &rover, string &helicopter)
-{
-    int netX = 0, netY = 0;
+// bool check(unordered_map<char, int> &mp, unordered_map<char, int> &rmp)
+// {
+//     if (mp['N'] / 2 != rmp['N'] || mp['S'] / 2 != rmp['S'] || mp['E'] / 2 != rmp['E'] || mp['W'] / 2 != rmp['W'])
+//         return false;
 
-    for (char c : s)
-    {
-        if (c == 'N')
-            netY++;
-        else if (c == 'S')
-            netY--;
-        else if (c == 'E')
-            netX++;
-        else if (c == 'W')
-            netX--;
-    }
+//     // if (mp['N'] / 2 != hmp['N'] || mp['S'] / 2 != hmp['S'] || mp['E'] / 2 != hmp['E'] || mp['W'] / 2 != hmp['W'])
+//     //     return false;
 
-    if (abs(netX) % 2 != 0 || abs(netY) % 2 != 0)
-    {
-        return false;
-    }
-
-    int halfNetX = netX / 2;
-    int halfNetY = netY / 2;
-
-    int currentX = 0,
-        currentY = 0;
-    bool roverHasInstruction = false, helicopterHasInstruction = false;
-
-    for (char c : s)
-    {
-        if (c == 'N')
-        {
-            if (currentY < halfNetY)
-            {
-                rover += c;
-                currentY++;
-                roverHasInstruction = true;
-            }
-            else
-            {
-                helicopter += c;
-                helicopterHasInstruction = true;
-            }
-        }
-        else if (c == 'S')
-        {
-            if (currentY > -halfNetY)
-            {
-                rover += c;
-                currentY--;
-                roverHasInstruction = true;
-            }
-            else
-            {
-                helicopter += c;
-                helicopterHasInstruction = true;
-            }
-        }
-        else if (c == 'E')
-        {
-            if (currentX < halfNetX)
-            {
-                rover += c;
-                currentX++;
-                roverHasInstruction = true;
-            }
-            else
-            {
-                helicopter += c;
-                helicopterHasInstruction = true;
-            }
-        }
-        else if (c == 'W')
-        {
-            if (currentX > -halfNetX)
-            {
-                rover += c;
-                currentX--;
-                roverHasInstruction = true;
-            }
-            else
-            {
-                helicopter += c;
-                helicopterHasInstruction = true;
-            }
-        }
-    }
-
-    if (!roverHasInstruction || !helicopterHasInstruction)
-    {
-        return false;
-    }
-
-    return true;
-}
+//     return true;
+// }
 
 void solve()
 {
@@ -131,17 +46,100 @@ void solve()
     string s;
     cin >> s;
 
-    string rover = "", helicopter = "";
+    int y, x;
+    y = 0, x = 0;
+    unordered_map<char, int> mp;
+    int fn = -1, fs = -1, fe = -1, fw = -1;
 
-    if (distributeInstructions(s, n, rover, helicopter))
+    loop(i, 0, n)
     {
-        cout << rover << nL;
-        cout << helicopter << nL;
+        if (s[i] == 'N')
+            y++, fn = i;
+        if (s[i] == 'S')
+            y--, fs = i;
+
+        if (s[i] == 'E')
+            x++, fe = i;
+        if (s[i] == 'W')
+            x--, fw = i;
+
+        mp[s[i]]++;
+    }
+
+    if (x % 2 != 0 || y % 2 != 0)
+    {
+        cout << "NO\n";
+        return;
+    }
+
+    if (n == 2 && x == 0 && y == 0)
+    {
+        cout << "NO\n";
+        return;
+    }
+
+    string ans;
+    loop(i, 0, n)
+    {
+        ans.pb('H');
+    }
+
+    if (x == 0 && y == 0)
+    {
+        if (fn != -1)
+        {
+            ans[fn] = 'R';
+            ans[fs] = 'R';
+        }
+        else if (fe != -1)
+        {
+            ans[fe] = 'R';
+            ans[fw] = 'R';
+        }
     }
     else
     {
-        cout << "NO" << nL;
+        loop(i, 0, n)
+        {
+            if (s[i] == 'N')
+            {
+                if (y > 0)
+                {
+                    ans[i] = 'R';
+                    y -= 2;
+                }
+            }
+
+            if (s[i] == 'S')
+            {
+                if (y < 0)
+                {
+                    ans[i] = 'R';
+                    y += 2;
+                }
+            }
+
+            if (s[i] == 'E')
+            {
+                if (x > 0)
+                {
+                    ans[i] = 'R';
+                    x -= 2;
+                }
+            }
+
+            if (s[i] == 'W')
+            {
+                if (x < 0)
+                {
+                    ans[i] = 'R';
+                    x += 2;
+                }
+            }
+        }
     }
+
+    cout << ans << nL;
 }
 signed main()
 {

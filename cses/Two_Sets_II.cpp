@@ -35,41 +35,31 @@ void solve()
     int n;
     cin >> n;
 
-    int s = n * (n + 1) / 2;
-    if ((s & 1) == 1)
+    int totSum = n * (n + 1) / 2;
+
+    if (totSum % 2)
     {
         cout << 0 << nL;
         return;
     }
-    s /= 2;
 
-    vvi dp(s + 1, vi(n + 1, 0));
+    totSum /= 2;
+
+    vvi dp(totSum + 1, vi(n + 1, 0));
 
     dp[0][0] = 1;
 
-    loop(i, 1, s + 1)
+    forEqual(i, 1, totSum)
     {
-        loop(j, 1, n + 1)
+        forEqual(j, 1, n)
         {
             dp[i][j] = dp[i][j - 1];
-
             if (i - j >= 0)
-            {
                 dp[i][j] = (dp[i][j] + dp[i - j][j - 1]) % mod;
-            }
         }
     }
 
-    // for (auto it : dp)
-    // {
-    //     for (auto i : it)
-    //     {
-    //         cout << i << " ";
-    //     }
-    //     cout << nL;
-    // }
-
-    cout << dp[s][n] << nL;
+    cout << dp[totSum][n] << nL;
 }
 signed main()
 {

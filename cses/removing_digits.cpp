@@ -1,8 +1,6 @@
-// https://cses.fi/problemset/task/1637
-
 #include <bits/stdc++.h>
 using namespace std;
-// #define int long long
+#define int long long
 #define nL "\n"
 #define pb push_back
 #define mk make_pair
@@ -38,13 +36,15 @@ void solve()
     while (n)
     {
         string s = to_string(n);
-        int maxi = 0;
-        for (auto c : s)
+
+        int mx = 0;
+
+        for (char c : s)
         {
-            maxi = max(maxi, c - '0');
+            mx = max(mx, 1LL * (c - '0'));
         }
 
-        n -= maxi;
+        n -= mx;
 
         ans++;
     }
@@ -58,7 +58,7 @@ signed main()
     // #ifndef ONLINE_JUDGE
     // freopen("div7.in", "r", stdin);
     // freopen("div7.out", "w", stdout);
-    //  #endif
+    // #endif
     int tc = 1;
     // cin >> tc;
     for (int t = 1; t <= tc; t++)

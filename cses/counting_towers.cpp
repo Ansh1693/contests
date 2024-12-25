@@ -29,22 +29,20 @@ typedef unordered_map<string, vi> umsvi;
 typedef unordered_map<int, vi> umivi;
 typedef map<int, int> mii;
 const int mod = 1e9 + 7;
-
-int dp[10000001][2];
+int dp[1000001][2];
 
 void solve(int n)
 {
-    memset(dp, 0, sizeof(dp));
-
     dp[0][0] = 1;
     dp[0][1] = 1;
 
-    loop(i, 1, n)
+    forEqual(i, 1, n)
     {
-        dp[i][0] = ((4 * dp[i - 1][0]) % mod + dp[i - 1][1]) % mod;
-        dp[i][1] = ((2 * dp[i - 1][1]) % mod + dp[i - 1][0]) % mod;
+        dp[i][0] = (2 * dp[i - 1][0] + dp[i - 1][1]) % mod;
+        dp[i][1] = (4 * dp[i - 1][1] + dp[i - 1][0]) % mod;
     }
 }
+
 signed main()
 {
     ios_base::sync_with_stdio(false);
